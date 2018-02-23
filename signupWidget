@@ -1,0 +1,29 @@
+<?php
+namespace frontend\components;
+use Yii;
+use yii\base\Widget;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
+
+use frontend\models\SignupForm;
+
+
+class SignupWidget extends Widget {
+	public function run() {
+
+		 $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+		 return $this->render('sign', [
+            'model' => $model,
+        ]);
+	}
+}
+
+?>
